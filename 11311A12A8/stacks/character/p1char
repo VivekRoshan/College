@@ -1,0 +1,146 @@
+/*Name:S.Vivek Roshan       Roll:11311A12A8                  Date:1/3/2012
+ *class:IT F2
+elementdef.h */
+typedef char elementtype;   //initialising the elementtype
+/*Name:S.Vivek Roshan roll:11311A12A8                  Date:1/3/2012
+ *class:IT F2
+ * element.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"elementdef.h"        //adding the elementdef.h header file
+elementtype readelement();     //reading the element
+void showelement(elementtype x);   //prototype for showing the element
+
+/*Name:S.Vivek Roshan     Roll:11311A12A8                  Date:1/3/2012
+ *class:IT F2
+ * element.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"     //including the element.h header file
+char readelement()
+{
+	elementtype x;   //function to read the element character type
+	printf("enter the character");    
+	scanf(" %c",&x);     //reading the element
+	return x;
+}
+void showelement(elementtype x)     //function to show the element
+{
+	printf("\t %5c\n",x);   
+}
+
+
+/*Name:S.Vivek Roshan     Roll:11311A12A8                 Date:1/3/2012
+ *class:IT F2 
+ * stackADT.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"       //including the element.h
+struct stack               //structure of the stack
+{
+	int maxsize;       //members
+	int top;
+	elementtype *stackelement;
+};                                  //all the prototypes
+struct stack createstack(int m); 
+void initstack(struct stack *s);
+int empty(struct stack *s);
+int full(struct stack *s);
+void push(struct stack *s,elementtype e);
+elementtype pop(struct stack *s);
+void display(struct stack s);
+elementtype viewtop(struct stack s);
+void disposestack(struct stack *s);
+
+
+/*Name:S.Vivek Roshan                     Date:1/3/2012
+ *class:IT F2          Roll:11311A12A8
+ * stackADT.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"stackADT.h"       //including the stackADT.h header file
+struct stack createstack(int m)     //creating the memory
+{
+	struct stack temp;
+	temp.maxsize=m;
+	temp.stackelement=(elementtype*)malloc(m*sizeof (elementtype));
+	return temp;
+}
+void initstack(struct stack *s)     //initialising the stack in function
+{
+	s->top=0;
+}
+int empty(struct stack *s)
+{
+	return(s->top==0);                //checking wheather it is empty
+}
+int full(struct stack *s)            //checking wheather it is full
+{
+	return(s->top==s->maxsize);
+}
+void push(struct stack *s,elementtype e)    //function for pushing
+{
+if(full(s))
+	printf("error:over flow");
+else
+	s->stackelement[s->top++]=e;
+}
+elementtype pop(struct stack *s)           //function for popping
+{
+if(empty(s))
+{
+	printf("error:under flow");
+	exit(1);
+}
+return s->stackelement[--(s->top)];
+}
+void display(struct stack s)               //function for display the stack
+{
+	int i;
+	printf("top-->\n");
+	for(i=s.top-1;i>=0;i--)
+{
+showelement(s.stackelement[i]);
+}
+	printf("-------------------------stack");
+}
+elementtype viewtop(struct stack s)      //function for viewing the top
+{
+	return(s.stackelement[s.top-1]);
+}
+void disposestack(struct stack *s)   //for disposing the stack
+{
+	free(s->stackelement);
+}
+
+/*Name:Vivek Roshan                              Date:1/3/2012
+ *  * Class:IT F2      Rollnum:11311A12A8
+ * program to find reverse of the string */
+
+#include<stdio.h>
+#include<stdlib.h>
+#include"stackADT.h"
+int main()
+{
+	struct stack s;
+	char c;
+	s=createstack(20);
+	initstack(&s);
+	while((c=getchar())!='\n')
+		push(&s,c);
+	printf("the reverse of the string is :");
+	while(!empty(&s))
+       		putchar(pop(&s));
+	putchar('\n');
+	disposestack(&s);
+	return 0;
+}
+/*
+[11311A12A8@itlab character]$ gcc reverse.c element.c stackADT.c
+[11311A12A8@itlab character]$ ./a.out
+vivek
+the reverse of the string is :keviv
+[11311A12A8@itlab character]$ ./a.out
+roshan
+the reverse of the string is :nahsor
+*/

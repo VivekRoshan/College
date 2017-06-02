@@ -1,0 +1,241 @@
+/*Name:S.Vivek Roshan                         Date:22/03/2012  
+Class:ITF2                                    Roll:11311A12A8
+elementdef.h */
+typedef int elementtype;   //initialising the elementtype
+
+/*Name:S.Vivek Roshan                               Date:22/03/2012
+Class:IT F2                                       Roll:11311A12A8
+ * element.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"elementdef.h"        //adding the elementdef.h header file
+elementtype readelement();     //reading the element
+void showelement(elementtype x);   //prototype for showing the element
+
+/*Name:S.Vivek Roshan                             Date:22/03/2012
+Class:IT F2                                       Roll:11311A12A8  
+ * element.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"     //including the element.h header file
+elementtype readelement()
+{
+        elementtype x;   //function to read the element
+        printf("enter the integer");
+        scanf("%d",&x);     //reading the element
+        return x;
+}
+void showelement(elementtype x)     //function to show the element
+{
+        printf("\t%5d\n",x);
+}
+
+
+
+
+
+/*Name:S.Vivek Roshan                           Date:22/03/2012
+Class:IT F2                                     Roll:11311A12A8
+ * queueADT.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"       //including the element.h
+struct queue               //structure of the stack
+{
+        int maxsize;       //members
+        int front;
+	int rear;
+        elementtype *queueelement;
+};                                  //all the prototypes
+struct queue createqueue(int m);
+void initqueue(struct queue *s);
+int empty(struct queue *s);
+int full(struct queue *s);
+void add(struct queue *s,elementtype e);
+elementtype delete(struct queue *s);
+void display(struct queue s);
+elementtype viewhead(struct queue s);
+void disposequeue(struct queue *s);
+
+
+
+
+/*Name:S.Vivek Roshan                      Date:22/03/2012    
+Class:IT F2                                Roll:11311A12A8
+ * queueADT.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"queueADT.h"       //including the queueADT.h header file
+struct queue createqueue(int m)     //creating the memory
+{
+        struct queue temp;
+        temp.maxsize=m;
+        temp.queueelement=(elementtype*)malloc(m*sizeof (elementtype));
+        return temp;
+}
+void initqueue(struct queue *s)     //initialising the stack in function
+{
+        s->front=0;
+	s->rear=0;
+}
+int empty(struct queue*s)
+{
+        return(s->rear==s->front);                //checking wheather it is empt
+}
+int full(struct queue *s)            //checking wheather it is full
+{
+        return((s->front)==((s->rear+1)%s->maxsize));
+}
+void add(struct queue *s,elementtype e)    //function for adding
+{
+if(full(s))
+        printf("error:over flow");
+else
+        s->queueelement[s->rear++]=e;
+	s->rear%=s->maxsize;
+}
+elementtype delete(struct queue *s)           //function for deleting
+{
+elementtype e;
+if(empty(s))
+{
+        printf("error:under flow");
+        exit(1);
+}
+e=s->queueelement[(s->front)++];
+s->front%=s->maxsize;
+return e;
+}
+void display(struct queue s)               //function for display the stack
+{
+        int i,j;
+        printf("head--->\n");
+        i=s.front;
+	j=s.rear;
+	while(i!=j)
+	{
+		showelement(s.queueelement[i++]);
+		i%=s.maxsize;
+	}
+        printf("rear--->\n");
+	}
+elementtype viewhead(struct queue s)      //function for viewing the top
+{
+        return(s.queueelement[s.front]);
+}
+void disposequeue(struct queue *s)   //for disposing the stack
+{
+        free (s->queueelement);
+}
+
+
+
+
+
+/*Name:S.Vivek Roshan                            Roll:11311A12A8
+ * Class:IT F2                                   Date:22/03/2012 
+ * queue.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"queueADT.h"           //including stackADT.h header file
+int menu()
+{
+int choice;
+printf("\t1.add\n\t2.delete\n\t3.view head\n\t4.display\n\t5.exit\n"); //choices
+printf("enter choice");
+scanf("%d",&choice);
+return choice;
+}
+int main()    //main program
+{
+struct queue s;
+int choice;
+elementtype x;
+s=createqueue(20);   //calling the function
+initqueue(&s);
+while((choice=menu())!=5)     //calling the function
+
+{
+	switch(choice)     //switch case
+	{
+	case 1:x=readelement();
+	       add(&s,x);
+	       break;
+	case 2:x=delete(&s);
+	      showelement(x);
+	      break;
+	case 3:showelement(viewhead(s));
+	       break;
+	case 4:display(s);
+	       break;
+	default:printf("error\n");
+	}
+}
+return 0;
+}
+/*
+ * OUTPUTS
+[11311A12A8@itlab integer]$ gcc queue.c queueADT.c element.c
+[11311A12A8@itlab integer]$ ./a.out
+        1.add
+        2.delete
+        3.view head
+        4.display
+        5.exit
+enter choice1
+enter the integer1
+        1.add
+        2.delete
+        3.view head
+        4.display
+        5.exit
+enter choice1
+enter the integer2
+        1.add
+        2.delete
+        3.view head
+        4.display
+        5.exit
+enter choice1
+enter the integer3
+        1.add
+        2.delete
+        3.view head
+        4.display
+        5.exit
+enter choice1
+enter the integer4
+        1.add
+        2.delete
+        3.view head
+        4.display
+        5.exit
+enter choice2
+            1
+        1.add
+        2.delete
+        3.view head
+        4.display
+        5.exit
+enter choice3
+            2
+        1.add
+        2.delete
+        3.view head
+        4.display
+        5.exit
+enter choice4
+head--->
+            2
+            3
+            4
+rear--->
+        1.add
+        2.delete
+        3.view head
+        4.display
+        5.exit
+enter choice5
+
+*/
+

@@ -1,0 +1,195 @@
+/*Name:S.Vivek Roshan     Roll:11311A12A8                  Date:1/3/2012
+ *class:IT F2 
+elementdef.h */
+typedef int elementtype;   //initialising the elementtype
+/*Name:S.Vivek Roshan roll:11311A12A8                  Date:1/3/2012
+ *class:IT F2
+ * element.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"elementdef.h"        //adding the elementdef.h header file
+elementtype readelement();     //reading the element
+void showelement(elementtype x);   //prototype for showing the element
+
+/*Name:S.Vivek Roshan     Roll:11311A12A8                  Date:1/3/2012
+ *class:IT F2
+ * element.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"     //including the element.h header file
+int readelement()
+{
+	elementtype x;   //function to read the element
+	printf("enter the integer");    
+	scanf("%d",&x);     //reading the element
+	return x;
+}
+void showelement(elementtype x)     //function to show the element
+{
+	printf("\t%5d\n",x);   
+}
+
+
+/*Name:S.Vivek Roshan       Roll:11311A12A8                  Date:1/3/2012
+ *class:IT F2
+ * stackADT.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"       //including the element.h
+struct stack               //structure of the stack
+{
+	int maxsize;       //members
+	int top;
+	elementtype *stackelement;
+};                                  //all the prototypes
+struct stack createstack(int m); 
+void initstack(struct stack *s);
+int empty(struct stack *s);
+int full(struct stack *s);
+void push(struct stack *s,elementtype e);
+elementtype pop(struct stack *s);
+void display(struct stack s);
+elementtype viewtop(struct stack s);
+void disposestack(struct stack *s);
+
+
+/*Name:S.Vivek Roshan     Roll:11311A12A8                  Date:1/3/2012
+ *class:IT F2
+ * stackADT.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"stackADT.h"       //including the stackADT.h header file
+struct stack createstack(int m)     //creating the memory
+{
+	struct stack temp;
+	temp.maxsize=m;
+	temp.stackelement=(elementtype*)malloc(m*sizeof (elementtype));
+	return temp;
+}
+void initstack(struct stack *s)     //initialising the stack in function
+{
+	s->top=0;
+}
+int empty(struct stack *s)
+{
+	return(s->top==0);                //checking wheather it is empty
+}
+int full(struct stack *s)            //checking wheather it is full
+{
+	return(s->top==s->maxsize);
+}
+void push(struct stack *s,elementtype e)    //function for pushing
+{
+if(full(s))
+	printf("error:over flow");
+else
+	s->stackelement[s->top++]=e;
+}
+elementtype pop(struct stack *s)           //function for popping
+{
+if(empty(s))
+{
+	printf("error:under flow");
+	exit(1);
+}
+return s->stackelement[--(s->top)];
+}
+void display(struct stack s)               //function for display the stack
+{
+	int i;
+	printf("top-->\n");
+	for(i=s.top-1;i>=0;i--)
+{
+showelement(s.stackelement[i]);
+}
+	printf("-------------------------stack");
+}
+elementtype viewtop(struct stack s)      //function for viewing the top
+{
+	return(s.stackelement[s.top-1]);
+}
+void disposestack(struct stack *s)   //for disposing the stack
+{
+	free(s->stackelement);
+}
+
+/*Name:S.Vivek Roshan                           Date:1/3/2012
+ * class:IT F2               RollNum:11311A12A8 */
+#include<stdio.h>
+#include<stdlib.h>
+#include"stackADT.h"
+#include<ctype.h>
+#define NUMBER 0
+int gettoken(char *s)
+{
+  int i=0,c;
+  while((s[0]=c=getchar())==' '||c=='\t')
+    ;
+  s[1]='\0';
+  if(!isdigit(c))
+    return c;
+  while(isdigit(s[++i]=c=getchar()))
+     ;
+  s[i]='\0';
+  if(c!=EOF)
+    ungetc(c,stdin);
+  return NUMBER;
+}
+int main()
+{
+   struct stack st;
+   int type;
+   elementtype op2;
+   char s[80];
+   st=createstack(50);
+   initstack(&st);
+   while((type=gettoken(s))!=EOF)
+   {
+     switch(type)
+     {
+       case NUMBER: push(&st,atoi(s));
+                      break;
+       case '+': push(&st,pop(&st)+pop(&st));
+                    break;
+       case '*': push(&st,pop(&st)*pop(&st));
+                    break;
+       case '-': op2=pop(&st);
+                 push(&st,pop(&st)-op2);
+                 break;
+       case '/': op2=pop(&st);
+                 if(op2)
+                   push(&st,pop(&st)/op2);
+                 else
+                   printf("error \n");
+                 break;
+       case '%': op2=pop(&st);
+                 if(op2)
+                  push(&st,pop(&st)%op2);
+                else
+                  printf("error \n");
+                  break;
+       case '\n': op2=pop(&st);
+                  if(empty(&st))
+                    showelement(op2);
+                  else
+                   {
+                     printf("error \n");
+                   }break;
+       default :printf("illegal choice \n");
+      }
+    }
+    disposestack(&st);
+    return 0;
+} 
+/*
+[11311A12A8@itlab integer]$ gcc evaluateRPN.c element.c stackADT.c
+[11311A12A8@itlab integer]$ ./a.out
+2 3+
+            5
+^Z
+[2]+  Stopped                 ./a.out
+[11311A12A8@itlab integer]$ gcc evaluateRPN.c element.c stackADT.c
+[11311A12A8@itlab integer]$ ./a.out
+12 2 8 3+*-
+          -10
+*/

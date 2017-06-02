@@ -1,0 +1,50 @@
+/*
+output:
+ 
+[11311A12A8@itlab cn]$ ./a.out
+enter the size of the reference string
+20
+enter the number of frames4
+enter the reference string
+7
+0
+1
+2
+0
+3
+0
+4
+2
+3
+0
+3
+2
+1
+2
+0
+1
+7
+0
+1
+7 -1 -1 -1
+7 0 -1 -1
+7 0 1 -1
+7 0 1 2
+7 0 1 2
+3 0 1 2
+3 0 1 2
+3 0 4 2
+3 0 4 2
+3 0 4 2
+3 0 4 2
+3 0 4 2
+3 0 4 2
+3 0 1 2
+3 0 1 2
+3 0 1 2
+3 0 1 2
+7 0 1 2
+7 0 1 2
+7 0 1 2
+the number of page faults are 8
+*/

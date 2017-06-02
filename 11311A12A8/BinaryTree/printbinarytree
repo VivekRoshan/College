@@ -1,0 +1,218 @@
+/*                          Binary Tree
+ * NAME:S.Vivek Roshan                         ROLL:11311A12A8
+ * CLASS:IT F2                                 DATE:26/04/2011
+ * elementDef.h
+typedef int elementType;
+
+
+/*element.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"elementDef.h"
+
+elementType readElement();
+
+void showElement(elementType e);
+
+
+/*element.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"
+
+elementType readElement()
+{
+	elementType e;
+	printf("enter an integer: ");
+	scanf(" %d",&e);
+	return e;
+}
+
+void showElement(elementType e)
+{
+	printf("\n\t%5d",e);
+}
+
+
+
+/*bintreeADT.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"
+
+struct treeNode
+{
+	int data;
+	struct treeNode *left;
+	struct treeNode *right;
+};
+
+struct BinSerTree
+{
+	struct treeNode *root;
+};
+void initBST(struct BinSerTree *t);
+void addTree(struct BinSerTree *t, int x);
+void buildBST(struct BinSerTree *t);
+struct treeNode* insert(struct treeNode *t,int x);
+void inOrder(struct BinSerTree t);
+void inOrderFrom(struct treeNode *tn);
+struct treeNode* delete(struct treeNode *t, int x);
+struct treeNode* findMin(struct treeNode *t);
+
+
+
+/*bintreeADT.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"bintreeADT.h"
+
+void initBST(struct BinSerTree *t)
+{
+	t->root=NULL;
+}
+
+
+struct treeNode* insert(struct treeNode *t,int x)
+{
+        if(t==NULL)
+        {
+                t=(struct treeNode*)malloc(sizeof(struct treeNode));
+                t->data=x;
+                t->left=NULL;
+                t->right=NULL;
+        }
+        else if(x<t->data)
+                t->left=insert(t->left,x);
+        else
+               t->right=insert(t->right,x);
+
+	return t;
+}
+
+void buildBST(struct BinSerTree *t)
+{
+	int x;
+	struct treeNode *temp;
+	printf("enter next integer: ");
+	scanf("%d",&x);
+	while(x)
+	{
+		t->root=insert(t->root,x);
+		printf("enter next integer: ");
+		scanf("%d",&x);
+	}
+}
+
+
+void inOrderFrom(struct treeNode *tn)
+{
+	if(tn!=NULL)
+	{
+		inOrderFrom(tn->left);
+		showElement(tn->data);
+		inOrderFrom(tn->right);
+	}
+}
+
+void inOrder(struct BinSerTree t)
+{
+	inOrderFrom(t.root);
+}
+
+struct treeNode* delete(struct treeNode *t, int x)
+{
+	struct treeNode *temp;
+	if(t==NULL)
+		printf("ERROR: node not found\n");
+        else if(x<t->data)
+                t->left=delete(t->left,x);
+        else if(x>t->data)
+		t->right=delete(t->right,x);
+	else if(t->left && t->right)
+	{
+		temp=findMin(t->right);
+		t->data=temp->data;
+		t->right=delete(t->right,t->data);
+	}
+	else
+	{
+		temp=t;
+		if(t->left==NULL)
+			t=t->right;
+		else if(t->right=NULL)
+			t=t->left;
+		free(temp);
+	}
+	return t;
+}
+
+struct treeNode* findMin(struct treeNode *t)
+{
+	if(t==NULL)
+		return NULL;
+	else if(t->left==NULL)
+		return t;
+	else
+		return findMin(t->left);
+}
+
+
+
+
+/*bintree*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"bintreeADT.h"
+int main()
+{
+
+	elementType x;
+	struct BinSerTree t;
+	initBST(&t);
+	buildBST(&t);
+	inOrder(t);
+	printf("\nenter a value to delete:\n");
+	scanf("%d",&x);
+	t.root=delete(t.root,x);
+	inOrder(t);
+	printf("\n");
+	return 0;
+}
+
+
+
+
+
+/*       OUTPUTS:
+[11311A12A8@itlab BinaryTree]$ gcc bintreeADT.c bintree.c element.c
+[11311A12A8@itlab BinaryTree]$ ./a.out
+enter next integer: 2
+enter next integer: 4
+enter next integer: 6
+enter next integer: 8
+enter next integer: 7
+enter next integer: 5
+enter next integer: 3
+enter next integer: 1
+enter next integer: 0
+
+            1
+            2
+            3
+            4
+            5
+            6
+            7
+            8
+enter a value to delete:
+6
+
+            1
+            2
+            3
+            4
+            5
+            7
+            8
+*/

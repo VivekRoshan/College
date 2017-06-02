@@ -1,0 +1,29 @@
+#include<stdio.h>
+#include<conio.h>
+#include<ctype.h>
+#include<sting.h>
+typedef elementtype int;
+elementtype readelement()
+{
+elementtype x;
+printf("enter the value");
+scanf("%d",&x);
+}
+void showelement(elementtype x)
+{
+printf("\n\t%5d");
+}
+struct stack
+{
+int maxsize;
+int top;
+elementtype *stackelement;
+};
+struct stack createstack(int m)
+{
+struct stack temp;
+temp.maxsize=m;
+temp.stackelement=(elementtype *)malloc(m*(sizeof(elementtype)));
+return temp;
+}
+

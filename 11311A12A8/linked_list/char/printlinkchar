@@ -1,0 +1,483 @@
+                             LINKED LIST
+/*Name:S.Vivek Roshan                         Date:29/04/2012  
+Class:ITF2                                    Roll:11311A12A8          
+elementdef.h */
+typedef char elementtype;   //initialising the elementtype
+
+
+
+
+/* element.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"elementdef.h"        //adding the elementdef.h header file
+elementtype readelement();     //reading the element
+void showelement(elementtype x);   //prototype for showing the element
+
+
+
+
+/* element.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"     //including the element.h header file
+char readelement()
+{
+        elementtype x;   //function to read the element
+        printf("enter the character");
+        scanf("%s",&x);     //reading the element
+        return x;
+}
+void showelement(elementtype x)     //function to show the element
+{
+        printf("\t%5c\n",x);
+}
+
+
+
+/*linkedlistADT.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"
+struct listnode
+{
+	elementtype data;
+	struct listnode *next;
+};
+struct linkedlist
+{
+	struct listnode *head;
+	struct listnode *tail;
+	struct listnode *position;
+};
+void initlinkedlist(struct linkedlist *s);
+int empty(struct linkedlist *s);
+void addathead(struct linkedlist *s,elementtype e);
+void addattail(struct linkedlist *s,elementtype e);
+void insertafter(struct linkedlist *s,elementtype e);
+void insertbefore(struct linkedlist *s,elementtype e);
+void deletehead(struct linkedlist *s);
+void deletetail(struct linkedlist *s);
+void deletenode(struct linkedlist *s);
+void deletebysearch(struct linkedlist *s,elementtype e);
+void editnode(struct linkedlist *s);
+void replaceby(struct linkedlist *s,elementtype e,elementtype e1);
+void display(struct linkedlist s);
+int search(struct linkedlist *s,elementtype e);
+
+
+
+
+/*linkedlistADT.c*/
+
+#include<stdio.h>
+#include<stdlib.h>
+#include"linkedlistADT.h"
+void initlinkedlist(struct linkedlist *s)
+{
+  s->head=NULL;
+  s->tail=NULL;
+  s->position=NULL;
+}
+
+int empty(struct linkedlist *s)
+{
+  return(s->head==NULL);
+}
+void addathead(struct linkedlist *s,elementtype e)
+{
+  struct listnode *temp;
+  temp=(struct listnode *)malloc(sizeof(struct listnode));
+  temp->data=e;
+  temp->next=s->head;
+  if (empty(s))
+   s->tail=temp;
+  s->head=temp;
+}
+void addattail(struct linkedlist *s,elementtype e)
+{
+  struct listnode *temp;
+  if(empty(s))
+    addathead(s,e);
+  else
+  {
+     temp=(struct listnode *)malloc(sizeof (struct listnode));
+     temp->data=e;
+     temp->next=NULL;
+     s->tail->next=temp;
+     s->tail=temp;
+  }
+}
+void insertafter(struct linkedlist *s,elementtype e)
+{
+  struct listnode *temp;
+  if(s->position!=NULL)
+  {
+    temp=(struct listnode *)malloc(sizeof(struct listnode));
+    temp->data=e;
+    temp->next=s->position->next;
+    s->position->next=temp;
+  }
+  else
+    printf("error: position not set \n");
+}
+void insertbefore(struct linkedlist *s,elementtype e)
+{
+  struct listnode *temp, *mover;
+  if(s->position!=NULL)
+  {
+    mover=s->head;
+    if(mover==s->position)
+      addathead(s,e);
+    else
+    {
+      while(mover->next!=s->position)
+        mover=mover->next;
+      temp=(struct listnode *)malloc(sizeof(struct listnode));
+      temp->data=e;
+      temp->next=s->position;
+     mover->next=temp;
+    }
+  }
+  else
+    printf("error: position not set \n");
+}
+void deleteathead(struct linkedlist *s)
+{
+   struct listnode *temp;
+   if(empty(s))
+     printf("error: already empty \n");
+   else
+   {
+     temp=s->head;
+     s->head=s->head->next;
+     free(temp);
+   }
+}
+void deleteattail(struct linkedlist *s)
+{
+  struct listnode *temp, *mover;
+  temp=s->tail;
+  mover=s->head;
+  if(mover==temp)
+    s->head=s->tail=s->position=NULL;
+  else
+  {
+    while(mover->next!=s->tail)
+       mover=mover->next;
+      s->tail=mover;
+      s->tail->next=NULL;
+      free(temp);
+  }
+}
+void deletenode(struct linkedlist *s)
+{
+  struct listnode *temp, *mover;
+  if(s->position==NULL)
+    printf("error \n");
+  else if(s->position==s->head)
+    deleteathead(s);
+  else if(s->position==s->tail)
+    deleteattail(s);
+  else
+  {
+    temp=s->position;
+    mover=s->head;
+    while(mover->next!=s->position)
+     mover=mover->next;
+    mover->next=s->position->next;
+    free(temp);
+    s->position=mover->next;
+   }
+}
+int search(struct linkedlist *s,elementtype e)
+{
+  s->position=s->head;
+  while(s->position!=NULL)
+  {
+    if(s->position->data==e)
+      return 1;
+    s->position=s->position->next;
+  }
+  return 0;
+}
+void deletebysearch(struct linkedlist *s,elementtype e)
+{
+  search(s,e);
+  deletenode(s);
+}
+void editnode(struct linkedlist *s)
+{
+  printf("the existing data is: \n");
+  showelement(s->position->data);
+  printf("enter new data: \n");
+  s->position->data=readelement();
+}
+void replaceby(struct linkedlist *s,elementtype e,elementtype e1)
+{
+  search(s,e);
+  s->position->data=e1;
+}
+void display(struct linkedlist s)
+{
+  struct listnode *temp;
+  temp=s.head;
+  while(temp!=NULL)
+  {
+    showelement(temp->data);
+    temp=temp->next;
+  }
+}
+
+
+
+/*linkedlist.c*/
+#include<stdio.h>	
+#include<stdlib.h>
+#include"linkedlistADT.h"
+int menu()
+{
+  	int choice;
+  	printf("\t1. add at head\n\t2.add attail\n\t3.insert after\n");
+  	printf("\t4.insert before\n\t5.delete head\n\t6.delete tail\n");
+  	printf("\t7.delete node\n\t8.search\n\t9.delete by search\n");
+  	printf("\t10.edit node\n\t11.replaceby\n\t12.display\n\t13.exit\n\t");
+  	printf("enter your choice:\n");
+  	scanf("%d",&choice);
+  	return choice;
+}
+int main()
+{
+  	struct linkedlist s;
+  	int choice;
+  	elementtype e,e1;
+  	initlinkedlist(&s);
+  	while((choice=menu())!=13)
+  	{
+    	switch(choice)
+    	{
+     		case 1: e=readelement();
+            	        addathead(&s,e);
+			break;
+     		case 2: e=readelement();
+                        addattail(&s,e);
+			break;
+     		case 3: e=readelement();
+                        insertafter(&s,e);
+			break;
+     		case 4: e=readelement();
+                        insertbefore(&s,e);
+			break;
+     		case 5: deleteathead(&s);
+			break;
+    		case 6: deleteattail(&s);
+			break;
+   	  	case 7: deletenode(&s);
+			break;
+     		case 8: if(search(&s,e=readelement()))
+        	        printf("search successfull \n");
+		else
+			printf("search not successfull\n");
+			break;
+     		case 9: deletebysearch(&s,search(&s,e));
+			break;
+     		case 10: editnode(&s);
+			break;
+   	  	case 11:e1=readelement();
+       	 	        replaceby(&s,search(&s,e),e1);
+			break;
+     		case 12:display(s);
+			break;
+     		case 13:printf("\n");
+            	default:printf("illegal choice\n");
+    }
+}
+   return 0;
+}
+
+
+
+
+
+
+/*     OUTPUTS
+*[11311A12A8@itlab char]$  gcc linkedlist.c linkedlistADT.c element.c
+[11311A12A8@itlab char]$ ./a.out
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+1
+enter the characterv
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+1
+enter the characteri
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+2
+enter the characterv
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+8
+enter the characteri
+search successfull
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+3
+enter the charactere
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+4
+enter the characterk
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+12
+            k
+            i
+            e
+            v
+            v
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+5
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+6
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+7
+        1. add at head
+        2.add attail
+        3.insert after
+        4.insert before
+        5.delete head
+        6.delete tail
+        7.delete node
+        8.search
+        9.delete by search
+        10.edit node
+        11.replaceby
+        12.display
+        13.exit
+        enter your choice:
+13
+* /

@@ -1,0 +1,249 @@
+/*student stack
+ * name:vivek roshan roll:11311A12A8
+ *class:it f2 date:23/02/2012
+elementdef.h */
+struct student   
+{
+	int rollno;
+	char name[20];
+	float marks;
+};
+typedef struct student elementtype;     //initialising elementtype
+/*name:vivek roshan roll:11311A12A8 
+ * class:it f2 date:23/02/2012 
+ * element.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"elementdef.h"        //adding the elementdef.h header file
+elementtype readelement();     //reading the element
+void showelement(elementtype x);   //prototype for showing the element
+
+
+
+
+/*name:vivek roshan rollnum:11311A12A8
+ * class:it f2 date:23/02/2012 
+ * element.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"     //including the element.h header file
+elementtype readelement()
+{
+	elementtype x;   //function to read the element
+	printf("enter the rollnumber");
+	scanf("%d",&x.rollno);
+	printf("enter the name:");
+	scanf("%s",x.name);
+	printf("enter the marks");
+	scanf("%f",&x.marks);         //reading the element structure
+	return x;
+}
+void showelement(elementtype x)     //function to show the element
+{
+	printf("rollno is %d\n",x.rollno);
+	printf("name is %s\n",x.name);
+	printf("marks are %f\n",x.marks);
+	putchar('\n');   
+}
+
+
+/*name:vivek roshan roll:11311A12A8 
+ * class:it f2 date:23/02/2012 
+ * stackADT.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"       //including the element.h
+struct stack               //structure of the stack
+{
+	int maxsize;       //members
+	int top;
+	elementtype *stackelement;
+};                                  //all the prototypes
+struct stack createstack(int m); 
+void initstack(struct stack *s);
+int empty(struct stack *s);
+int full(struct stack *s);
+void push(struct stack *s,elementtype e);
+elementtype pop(struct stack *s);
+void display(struct stack s);
+elementtype viewtop(struct stack s);
+void disposestack(struct stack *s);
+
+
+
+
+/*name:vivek roshan roll:11311A12A8
+ * class:it f2 date:23/02/2012 
+ * stackADT.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"stackADT.h"       //including the stackADT.h header file
+struct stack createstack(int m)     //creating the memory
+{
+	struct stack temp;
+	temp.maxsize=m;
+	temp.stackelement=(elementtype*)malloc(m*sizeof (elementtype));
+	return temp;
+}
+void initstack(struct stack *s)     //initialising the stack in function
+{
+	s->top=0;
+}
+int empty(struct stack *s)
+{
+	return(s->top==0);                //checking wheather it is empty
+}
+int full(struct stack *s)            //checking wheather it is full
+{
+	return(s->top==s->maxsize);
+}
+void push(struct stack *s,elementtype e)    //function for pushing
+{
+if(full(s))
+	printf("error:over flow");
+else
+	s->stackelement[s->top++]=e;
+}
+elementtype pop(struct stack *s)           //function for popping
+{
+if(empty(s))
+{
+	printf("error:under flow");
+	exit(1);
+}
+return s->stackelement[--(s->top)];
+}
+void display(struct stack s)               //function for display the stack
+{
+	int i;
+	printf("top-->\n");
+	for(i=s.top-1;i>=0;i--)
+{
+showelement(s.stackelement[i]);
+}
+	printf("-------------------------stack");
+}
+elementtype viewtop(struct stack s)      //function for viewing the top
+{
+	return(s.stackelement[s.top-1]);
+}
+void disposestack(struct stack *s)   //for disposing the stack
+{
+	free(s->stackelement);
+}
+
+/*name:vivek roshan roll:11311A12A8
+ * class:it f2 date:23/02/2012 
+ * stack.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"stackADT.h"           //including stackADT.h header file
+int menu()
+{
+int choice;
+printf("\t1.push\n\t2.pop\n\t3.view top\n\t4.display\n\t5.exit\n"); //choices
+printf("enter choice");
+scanf("%d",&choice);
+return choice;
+}
+int main()    //main program
+{
+struct stack s;
+int choice;
+elementtype x;
+s=createstack(20);   //calling the function
+initstack(&s);
+while((choice=menu())!=5)     //calling the function
+
+{
+	switch(choice)     //switch case
+	{
+	case 1:x=readelement();
+	       push(&s,x);
+	       break;
+	case 2:x=pop(&s);
+	      showelement(x);
+	      break;
+	case 3:showelement(viewtop(s));
+	       break;
+	case 4:display(s);
+	       break;
+	default:printf("error\n");
+	}
+}
+return 0;
+}
+
+/*11311A12A8@itlab student]$ gcc stack.c element.c stackADT.c
+[11311A12A8@itlab student]$ ./a.out
+	::output::
+        1.push
+        2.pop
+        3.view top
+        4.display
+        5.exit
+enter choice1
+enter the rollnumber1
+enter the name:vivek
+enter the marks99
+        1.push
+        2.pop
+        3.view top
+        4.display
+        5.exit
+enter choice1
+enter the rollnumber2
+enter the name:vamshi
+enter the marks98
+        1.push
+        2.pop
+        3.view top
+        4.display
+        5.exit
+enter choice1
+enter the rollnumber3
+enter the name:chandu
+enter the marks97
+        1.push
+        2.pop
+        3.view top
+        4.display
+        5.exit
+enter choice2
+rollno is 3
+name is chandu
+marks are 97.000000
+
+        1.push
+        2.pop
+        3.view top
+        4.display
+        5.exit
+enter choice3
+rollno is 2
+name is vamshi
+marks are 98.000000
+
+        1.push
+        2.pop
+        3.view top
+        4.display
+        5.exit
+enter choice4
+top-->
+rollno is 2
+name is vamshi
+marks are 98.000000
+
+rollno is 1
+name is vivek
+marks are 99.000000
+
+-------------------------stack  1.push
+        2.pop
+        3.view top
+        4.display
+        5.exit
+enter choice5
+[11311A12A8@itlab student]$
+*/

@@ -1,0 +1,279 @@
+/*                              Trees
+ * Name:S.Vivek Roshan	                                	CLASS:IT/F2
+ * Rollnumber:11311A12A8*/
+typedef int elementType;
+
+
+/*element.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"elementdef.h"
+
+elementType readElement();
+
+void showElement(elementType e);
+
+
+
+/*element.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"
+
+elementType readElement()
+{
+	elementType x;
+	printf("enter an integer: ");
+	scanf(" %d",&x);
+	
+	return x;
+}
+
+void showElement(elementType x)
+{
+	printf("%5d\n",x);
+}
+
+
+
+
+
+/*treeADT.h*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"element.h"
+
+struct treeNode
+{
+	elementType data;
+	struct treeNode *left;
+	struct treeNode *right;
+};
+
+struct tree
+{
+	struct treeNode *root;
+};
+
+struct treeNode* newTreeNode();
+
+void initTree(struct tree *t);
+
+void fillRoot(struct tree *t);
+
+void buildTreeFrom(struct treeNode *tn);
+
+void buildTree(struct tree *t);
+
+void preOrderFrom(struct treeNode *tn);
+
+void preOrder(struct tree t);
+
+void inOrderFrom(struct treeNode *tn);
+
+void inOrder(struct tree t);
+
+
+void postOrderFrom(struct treeNode *tn);
+
+void postOrder(struct tree t);
+
+
+
+
+
+/*treeADT.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"treeADT.h"
+
+void initTree(struct tree *t)
+{
+	t->root=NULL;
+}
+
+struct treeNode* newTreeNode()
+{
+	struct treeNode *temp;
+	temp=(struct treeNode *)malloc(sizeof(struct treeNode));
+	return temp;
+}
+
+void fillRoot(struct tree *t)
+{
+	t->root=newTreeNode();
+	printf("Enter data at node: ");
+	t->root->data=readElement();
+	t->root->left=NULL;
+        t->root->right=NULL;
+}
+
+void buildTreeFrom(struct treeNode *tn)
+{
+	elementType x;
+	printf("enter data left of: ");
+	showElement(tn->data);
+	if(x=readElement())
+	{
+		tn->left=newTreeNode();
+		tn->left->data=x;
+		tn->left->left=NULL;
+                tn->left->left=NULL;
+		buildTreeFrom(tn->left);
+	}
+	printf("enter data right of: ");
+	        showElement(tn->data);
+        if(x=readElement())
+        {
+                tn->right=newTreeNode();
+                tn->right->data=x;
+                tn->right->left=NULL;
+                tn->right->left=NULL;
+                buildTreeFrom(tn->right);
+        }
+}
+
+void buildTree(struct tree *t)
+{
+	fillRoot(t);
+	buildTreeFrom(t->root);
+}
+
+void preOrderFrom(struct treeNode *tn)
+{
+	if(tn!=NULL)
+	{
+		showElement(tn->data);
+		preOrderFrom(tn->left);
+		preOrderFrom(tn->right);
+	}
+}
+
+void preOrder(struct tree t)
+{
+	preOrderFrom(t.root);
+}
+
+
+void inOrderFrom(struct treeNode *tn)
+{
+        if(tn!=NULL)
+        {
+                inOrderFrom(tn->left);
+		showElement(tn->data);
+                inOrderFrom(tn->right);
+                
+        }
+}
+
+void inOrder(struct tree t)
+{
+        inOrderFrom(t.root);
+}
+
+
+void postOrderFrom(struct treeNode *tn)
+{
+        if(tn!=NULL)
+        {
+                postOrderFrom(tn->left);
+                postOrderFrom(tn->right);
+                showElement(tn->data);
+        }
+}
+
+void postOrder(struct tree t)
+{
+        postOrderFrom(t.root);
+}
+
+
+
+/*tree.c*/
+#include<stdio.h>
+#include<stdlib.h>
+#include"treeADT.h"
+
+int main()
+{
+	struct tree t;
+	initTree(&t);
+	buildTree(&t);
+	printf("Preorder tree traversal is \n");
+	preOrder(t);
+        printf("Inorder tree traversal is \n");
+        inOrder(t);
+
+        printf("Postorder tree traversal is \n");
+        postOrder(t);
+	
+	return 0;
+}
+
+
+
+
+/*         OUTPUTS
+[11311A12A8@itlab trees]$ gcc tree.c treeADT.c element.c
+[11311A12A8@itlab trees]$ ./a.out
+Enter data at node: enter an integer: 3
+enter data left of:     3
+enter an integer: 4
+enter data left of:     4
+enter an integer: 5
+enter data left of:     5
+enter an integer: 6
+enter data left of:     6
+enter an integer: 4
+enter data left of:     4
+enter an integer: 0
+enter data right of:     4
+enter an integer: 5
+enter data left of:     5
+enter an integer: 6
+enter data left of:     6
+enter an integer: 7
+enter data left of:     7
+enter an integer: 0
+enter data right of:     7
+enter an integer: 0
+enter data right of:     6
+enter an integer: 0
+enter data right of:     5
+enter an integer: 0
+enter data right of:     6
+enter an integer: 0
+enter data right of:     5
+enter an integer: 0
+enter data right of:     4
+enter an integer: 0
+enter data right of:     3
+enter an integer: 0
+Preorder tree traversal is
+    3
+    4
+    5
+    6
+    4
+    5
+    6
+    7
+Inorder tree traversal is
+    4
+    7
+    6
+    5
+    6
+    5
+    4
+    3
+Postorder tree traversal is
+    7
+    6
+    5
+    4
+    6
+    5
+    4
+    3
+*/

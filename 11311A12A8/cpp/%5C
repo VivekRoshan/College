@@ -1,0 +1,11 @@
+#include<iostream>
+using namespace std;
+int main()
+{
+	float c,f;
+	cout<<"Enter celsius temp.";
+	cin>>c;
+	f=c*9/5+32;
+	cout<<"the equivalent temp. is "<<f<<endl;
+	return 0;
+}
